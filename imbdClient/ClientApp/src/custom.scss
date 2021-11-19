@@ -1,0 +1,26 @@
+﻿/* Provide sufficient contrast against white background */
+body {
+    height: 100vh;
+    background-color: whitesmoke;
+}
+
+#root {
+    height: 100%;
+}
+
+.card {
+    width: 250px;
+}
+
+header {
+    padding-bottom: 50px !important;
+}
+
+main {
+    position: relative;
+    margin-top: -40px;
+    z-index:2;
+    background-color: whitesmoke;
+    box-shadow: 0px 20px 20px 0px gray;
+    padding-bottom: 40px;
+}
