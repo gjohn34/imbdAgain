@@ -6,6 +6,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using imbdAgain.Data;
+using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using System.Reflection;
 
 namespace imbdAgain
 {
@@ -22,7 +25,16 @@ namespace imbdAgain
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            //          services.AddMvc()
+            //.AddJsonOptions(options => {
+            //    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            //});
+            services.AddControllers()
+                .AddNewtonsoftJson(jsonOptions =>
+                {
+                    jsonOptions.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                }
+            );
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "imbdAgain", Version = "v1" });

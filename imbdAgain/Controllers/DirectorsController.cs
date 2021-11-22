@@ -15,24 +15,26 @@ namespace imbdAgain.Controllers
     public class DirectorsController : ControllerBase
     {
         private readonly ImbdAgainContext _context;
-
         public DirectorsController(ImbdAgainContext context)
         {
             _context = context;
         }
-
         // GET: api/Directors
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Director>>> GetDirectors()
+        public async Task<ActionResult<List<Director>>> GetDirectors()
         {
-            return await _context.Directors.ToListAsync();
+            return await _context.Directors
+                .Include(d => d.Movies)
+                .ToListAsync();
         }
 
         // GET: api/Directors/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Director>> GetDirector(int id)
         {
-            var director = await _context.Directors.FindAsync(id);
+            var director = await _context.Directors
+                .Include(d => d.Movies)
+                .FirstOrDefaultAsync(d => d.Id == id);
 
             if (director == null)
             {
