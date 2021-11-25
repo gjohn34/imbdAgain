@@ -9,7 +9,7 @@ body {
 .card {
   width: 250px; }
 
-header {
+#topbar {
   padding-bottom: 50px !important; }
 
 main {
@@ -19,3 +19,7 @@ main {
   background-color: whitesmoke;
   box-shadow: 0px 20px 20px 0px gray;
   padding-bottom: 40px; }
+
+@media screen and (min-width: 575px) {
+  #topbar form {
+    margin-left: auto; } }

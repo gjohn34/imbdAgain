@@ -3,7 +3,9 @@ import { Switch, Route } from 'react-router-dom';
 import Context, { reducer } from './context/globalState'
 
 import Layout from './components/Layout'
+import Movies from './pages/Home'
 import Home from './pages/Home'
+import MovieDetailPage from './pages/movies/MovieDetail';
 
 import './custom.css'
 
@@ -14,10 +16,10 @@ export default function App() {
     });
 
     useEffect(() => {
-        fetch("https://localhost:44351/api/Movies")
+        fetch(`${process.env.REACT_APP_API}/Movies`)
             .then(response => response.json())
             .then(data => dispatch({ action: "setMovies", data }))
-        fetch("https://localhost:44351/api/Directors")
+        fetch(`${process.env.REACT_APP_API}/Directors`)
             .then(response => response.json())
             .then(data => dispatch({ action: "setDirectors", data }))
     }, [])
@@ -30,10 +32,10 @@ export default function App() {
                         <Home />
                     </Route>
                     <Route exact path="/movies">
-                        <h2>All movies</h2>
+                        <Movies />
                     </Route>
                     <Route exact path="/movies/:id">
-                        <h2>Movie Id</h2>
+                        <MovieDetailPage />
                     </Route>
                     <Route exact path="/directors">
                         <h2>All Directors</h2>

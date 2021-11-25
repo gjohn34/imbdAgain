@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using imbdAgain.Data;
 using imbdAgain.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace imbdAgain.Controllers
 {
+    [EnableCors("AllowOrigin")]
     [Route("api/[controller]")]
     [ApiController]
     public class MoviesController : ControllerBase

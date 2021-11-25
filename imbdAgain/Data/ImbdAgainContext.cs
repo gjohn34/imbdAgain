@@ -35,27 +35,43 @@ namespace imbdAgain.Data
                     new Director
                     {
                         Id = 1,
-                        FirstName = "A",
-                        LastName = "B"
+                        FirstName = "Steven",
+                        LastName = "Speilberg"
                     },
                     new Director
                     {
                         Id = 2,
-                        FirstName = "C",
-                        LastName = "D"
+                        FirstName = "Alfred",
+                        LastName = "Hitchcock"
+                    },
+                    new Director
+                    {
+                        Id = 3,
+                        FirstName = "Uwe",
+                        LastName = "Boll"
                     }
                 );
             modelBuilder.Entity<Movie>()
                 .HasData(
-                    new Movie { Id = 1, DirectorId = 1, Title = "Foo" },
-                    new Movie { Id = 2, DirectorId = 2, Title = "Bar" }
+                    new Movie { Id = 1, DirectorId = 1, Title = "Duel" },
+                    new Movie { Id = 2, DirectorId = 1, Title = "Jaws" },
+                    new Movie { Id = 3, DirectorId = 1, Title = "ET" },
+                    new Movie { Id = 4, DirectorId = 2, Title = "The man who knew too much" },
+                    new Movie { Id = 5, DirectorId = 2, Title = "Psycho" },
+                    new Movie { Id = 6, DirectorId = 3, Title = "Resident Evil" },
+                    new Movie { Id = 7, DirectorId = 3, Title = "Doom" },
+                    new Movie { Id = 8, DirectorId = 3, Title = "BloodRayne" }
                 );
 
             modelBuilder.Entity<Review>()
                 .HasData(
-                    new Review { Id = 1, MovieId = 1, Score = 1, Content = "Meh" },
-                    new Review { Id = 2, MovieId = 1, Score = 4, Content = "Good" },
-                    new Review { Id = 3, MovieId = 2, Score = 5, Content = "Perfect" }
+                    new Review { Id = 1, MovieId = 1, Score = 9, Content = "Great movie" },
+                    new Review { Id = 2, MovieId = 1, Score = 7, Content = "Good" },
+                    new Review { Id = 3, MovieId = 1, Score = 8, Content = "Truck go brrr" },
+                    new Review { Id = 4, MovieId = 2, Score = 2, Content = "Too Scary" },
+                    new Review { Id = 5, MovieId = 8, Score = 1, Content = "Uwe boll at it again" },
+                    new Review { Id = 6, MovieId = 8, Score = 2, Content = "Trash" },
+                    new Review { Id = 7, MovieId = 8, Score = 1, Content = "Skip" }
                 );
         }
 
