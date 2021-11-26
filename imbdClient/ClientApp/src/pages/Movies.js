@@ -1,7 +1,11 @@
-﻿import { useEffect } from "react"
+﻿import React, { useEffect, useReducer, useContext } from 'react';
+import { Link, Route, Routes, useLocation } from 'react-router-dom'
+import Context from '../context/globalState';
+import FlexCollection, { Card } from '../components/FlexContainer'
+import MovieDetailPage from './movies/MovieDetail'
 
 export default function Movies() {
-    const { movies } = useContext(Context)
+    const { movies, dispatch } = useContext(Context)
     useEffect(() => {
         if (!movies) {
             fetch(`${process.env.REACT_APP_API}/Movies`)

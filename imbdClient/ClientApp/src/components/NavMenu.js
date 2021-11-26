@@ -7,6 +7,7 @@ import Nav from "react-bootstrap/Nav";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import postData from '../api'
 //import './NavMenu.css';
 
 //export class NavMenu extends Component {
@@ -60,8 +61,6 @@ export default function NavBar() {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        fetch(`${process.env.REACT_APP_API}/Search`)
-        console.log(form)
     }
 
 

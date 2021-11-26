@@ -2,18 +2,14 @@
 import { Card } from '../../components/FlexContainer'
 import Context from '../../context/globalState'
 import { useParams, Link } from 'react-router-dom'
+import { getData } from '../../api'
 
 export default function MovieDetailPage() {
-    const { movies } = useContext(Context)
     let { id } = useParams();
     const [movie, setMovie] = useState(null)
-
     useEffect(() => {
-        console.log(movies)
-        console.log(movie)
-        console.log(id)
         if (!movie && id) {
-            fetch(`${process.env.REACT_APP_API}/Movies/${id}`)
+            getData(`Movies/${id}`)
                 .then(response => response.json())
                 .then(data => setMovie(data))
         }

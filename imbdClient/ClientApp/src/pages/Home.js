@@ -24,7 +24,7 @@ export default function Home() {
                     <Card key={director.id}>
                         <h2 className="text-wrap">{director.firstName} {director.lastName}</h2>
                         <p>{director.bio}</p>
-                        <Link to={`/movies/${director.id}`} className="align-self-end btn btn-primary">Details</Link>
+                        <Link to={`/directors/${director.id}`} className="align-self-end btn btn-primary">Details</Link>
                     </Card>
                 ))}
             </FlexCollection>

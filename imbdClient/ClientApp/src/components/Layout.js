@@ -21,8 +21,8 @@ import { NavMenu } from './NavMenu';
 
 export default function Layout(props) {
     return (
-        <main className="container-md">
+        <Container id="main">
             {props.children}
-        </main>
+        </Container>
     )
 }
