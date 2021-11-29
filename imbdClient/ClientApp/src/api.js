@@ -1,8 +1,14 @@
 ﻿function postData(path, data, rest = {}) {
+    console.log(JSON.stringify(data))
     return fetch(`${process.env.REACT_APP_API}/${path}`, {
-            method: "POST",
-            body: data,
-            ...rest
+        method: "POST",
+        body: JSON.stringify(data),
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        ...rest
     })
 }
 

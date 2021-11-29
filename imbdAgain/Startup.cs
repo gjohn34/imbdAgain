@@ -38,7 +38,10 @@ namespace imbdAgain
 
             services.AddCors(c =>
             {
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
+                c.AddPolicy("AllowOrigin", options => {
+                    options.AllowAnyOrigin();
+                    options.AllowAnyHeader();
+                });
             });
             services.AddSwaggerGen(c =>
             {

@@ -1,8 +1,8 @@
 ﻿import React, { useEffect, useReducer, useContext } from 'react';
 import { Link, Route, Routes, useLocation } from 'react-router-dom'
-import Context from '../context/globalState';
-import FlexCollection, { Card } from '../components/FlexContainer'
-import MovieDetailPage from './movies/MovieDetail'
+import Context from '../../context/globalState';
+import FlexCollection, { Card } from '../../components/FlexContainer'
+import MovieDetailPage from './MovieDetail'
 
 export default function Movies() {
     const { movies, dispatch } = useContext(Context)

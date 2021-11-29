@@ -12,6 +12,11 @@ export const reducer = (state, { action, data }) => {
                 ...state,
                 directors: data
             }
+        case "setMobile":
+            return {
+                ...state,
+                isMobile: data
+            }
     }
     return state;
 }

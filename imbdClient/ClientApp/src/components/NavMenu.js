@@ -1,13 +1,13 @@
-import React, { Component, useState } from 'react';
-import { Link } from 'react-router-dom'
+import React, { Component, useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom'
 
+import Context from '../context/globalState'
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import postData from '../api'
+import { postData } from '../api'
 //import './NavMenu.css';
 
 //export class NavMenu extends Component {
@@ -56,10 +56,20 @@ import postData from '../api'
 //}
 
 export default function NavBar() {
-    const [form, setForm] = useState({ search: "" })
+    const [form, setForm] = useState({ query: "", type: "0" })
+    const { dispatch } = useContext(Context)
+    let navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        const { type } = form
+        postData("search", form)
+            .then(result => result.json())
+            .then(data => {
+                dispatch({ action: `set${type == "0" ? "Directors" : "Movies"}`, data })
+                navigate(`/${type == "0" ? "directors" : "movies"}`)
+            })
+
 
     }
 
@@ -73,8 +83,12 @@ export default function NavBar() {
                     <Nav className="w-100">
                         <Nav.Item><Link to="/movies" className="nav-link active">Movies</Link></Nav.Item>
                         <Nav.Item><Link to="/directors" className="nav-link active">Directors</Link></Nav.Item>
-                        <Form className="d-flex nav-item me-auto">
-                            <Form.Control type="text" placeholder="Search..." />
+                        <Form onSubmit={handleSubmit} className="d-flex nav-item me-auto">
+                            <Form.Control type="text" onChange={e => setForm({ ...form, query: e.target.value })} placeholder="Search..." />
+                            <Form.Select onChange={e => setForm({ ...form, type: e.target.value })} aria-label="search">
+                                <option defaultValue value="0">Directors</option>
+                                <option value="1">Movies</option>
+                            </Form.Select>
                             <Button type="submit">Search</Button>
                         </Form>
                     </Nav>
