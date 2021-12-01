@@ -39,6 +39,7 @@ namespace imbdAgain.Controllers
             var movie = await _context.Movies
                 .Include(m => m.Director)
                 .Include(m => m.Reviews)
+                //.Include(m => m.Genres)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (movie == null)
@@ -47,6 +48,28 @@ namespace imbdAgain.Controllers
             }
 
             return movie;
+        }
+
+        // GET: api/Movies/5/MoreLikeThis
+        [HttpGet("{id}/More")]
+        public async Task<ActionResult<IEnumerable<Movie>>> MoreLikeThis(int id)
+        {
+            var movie = await _context.Movies
+                .Include(m => m.Genres)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+            List<Genre> genres = movie.Genres;
+
+            var movies = await _context.Movies
+                .Where(m => m.Genres.Any(a => genres.Contains(a)) && m.Id != movie.Id)
+                .ToListAsync();
+
+            return movies;
         }
 
 

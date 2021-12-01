@@ -23,3 +23,10 @@ body {
 @media screen and (min-width: 575px) {
   #topbar form {
     margin-left: auto; } }
+
+.carousel-control-next, .carousel-control-prev {
+  display: block;
+  bottom: 0;
+  top: 90%;
+  opacity: 1;
+  position: absolute; }

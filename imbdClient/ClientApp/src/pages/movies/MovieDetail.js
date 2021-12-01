@@ -1,28 +1,82 @@
 ﻿// Packages
 import React, { useEffect, useState, useContext } from 'react'
-import { useParams} from 'react-router-dom'
+import { Link, useParams} from 'react-router-dom'
 import Context from '../../context/globalState'
 import { getData } from '../../api'
 // Components
-import { Card } from '../../components/FlexContainer'
+import FlexCollection, { Card } from '../../components/FlexContainer'
 import Container from 'react-bootstrap/esm/Container'
 import Button from 'react-bootstrap/Button'
 import Collapse from 'react-bootstrap/Collapse'
 import Col from 'react-bootstrap/esm/Col'
 import Row from 'react-bootstrap/esm/Row'
+import Carousel from 'react-bootstrap/Carousel'
 
 export default function MovieDetailPage() {
     let { id } = useParams();
+    const { isMobile } = useContext(Context)
     const [movie, setMovie] = useState(null)
     const [showComments, setShowComments] = useState(false)
-    const { isMobile } = useContext(Context)
+    const [likeThis, setLikeThis] = useState([])
+
+    const setItems = () => {
+        let count = 0
+        let array = []
+        let subArray = []
+        likeThis.forEach(m => {
+            if (count < Math.floor((window.innerWidth - 300) / 250)) {
+                subArray.push(
+                    <Link reloadDocument to={`/movies/${m.id}`}>
+                        <Card>
+                            <h2 className="text-wrap">{m.title}</h2>
+                            <p>{m.releaseYear}</p>
+                        </Card>
+                    </Link>
+                )
+            } else {
+                count = 0
+                array.push(
+                    <Carousel.Item>
+                        <FlexCollection>
+                            {subArray}
+                        </FlexCollection>
+                    </Carousel.Item>
+                )
+                subArray = [
+                    <Link reloadDocument to={`/movies/${m.id}`} >
+                        <Card>
+                            <h2 className="text-wrap">{m.title}</h2>
+                            <p>{m.releaseYear}</p>
+                        </Card>
+                    </Link>
+                ]
+            }
+            count += 1
+
+        })
+        array.push(
+            <Carousel.Item>
+                <FlexCollection>
+                    {subArray}
+                </FlexCollection>
+            </Carousel.Item>
+        )
+
+        return array
+    }
+
     useEffect(() => {
-        if (!movie && id) {
+        if (!movie || id != movie.id) {
             getData(`Movies/${id}`)
                 .then(response => response.json())
                 .then(data => setMovie(data))
+
+            getData(`Movies/${id}/More`)
+                .then(response => response.json())
+                .then(data => setLikeThis(data))
         }
-    }, [])
+
+    }, [id])
 
 
     return (
@@ -66,11 +120,32 @@ export default function MovieDetailPage() {
                             )}
                         </Col>
                     </Row>
-                    /// TODO - More Like this
                     <h2>More like this</h2>
+                    {isMobile ? 
+                        <Carousel style={{ backgroundColor: "black", color: "white", height: "500px" }}>
+                            {likeThis.map(m =>
+                                <Carousel.Item>
+                                    <h2 style={{ color: "yellow" }}>{m.title}</h2>
+                                </Carousel.Item>
+                            )}
+                        </Carousel>
+                        :
+                        <Carousel interval={null} style={{ backgroundColor: "black", color: "red", height: "500px" }}>
+                            {likeThis.length > 0 && setItems()}
+                        </Carousel>
+                    }
                 </Container>
             ) : null}
         </>
     )
 }
+
+
+//{
+//    filterByWidth().map(row =>
+//        <Carousel.Item>
+//            {row.map(c => <span style={{ width: "200px" }}>{c.title}</span>)}
+//        </Carousel.Item>
+//    )
+//}
 

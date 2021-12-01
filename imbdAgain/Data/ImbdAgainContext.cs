@@ -12,6 +12,7 @@ namespace imbdAgain.Data
         public DbSet<Director> Directors { get; set; }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<Genre> Genres { get; set; }
 
         public ImbdAgainContext (DbContextOptions<ImbdAgainContext> options)
             : base(options)
@@ -26,6 +27,20 @@ namespace imbdAgain.Data
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Movie>()
+                .HasMany(m => m.Genres)
+                .WithMany(m => m.Movies)
+                .UsingEntity<MovieGenre>(
+                    e => e
+                            .HasOne(mg => mg.Genre)
+                            .WithMany(g => g.MovieGenres)
+                            .HasForeignKey(mg => mg.GenreId),
+                    e => e
+                            .HasOne(mg => mg.Movie)
+                            .WithMany(m => m.MovieGenres)
+                            .HasForeignKey(mg => mg.MovieId),
+                    e => e
+                            .HasKey(mg => new { mg.GenreId, mg.MovieId })
+                )
                 .HasMany(m => m.Reviews)
                 .WithOne(r => r.Movie)
                 .OnDelete(DeleteBehavior.NoAction);
@@ -51,6 +66,20 @@ namespace imbdAgain.Data
                         LastName = "Boll"
                     }
                 );
+
+
+            modelBuilder.Entity<Genre>()
+                .HasData(
+                    new Genre { Id = 1, Name = "Thriller" },
+                    new Genre { Id = 2, Name = "Action" },
+                    new Genre { Id = 3, Name = "Family" },
+                    new Genre { Id = 4, Name = "Suspense" },
+                    new Genre { Id = 5, Name = "Sci-Fi" },
+                    new Genre { Id = 6, Name = "Adaptation" }
+
+                );
+
+
             modelBuilder.Entity<Movie>()
                 .HasData(
                     new Movie { Id = 1, DirectorId = 1, Title = "Duel" },
@@ -63,6 +92,28 @@ namespace imbdAgain.Data
                     new Movie { Id = 8, DirectorId = 3, Title = "BloodRayne" }
                 );
 
+            modelBuilder.Entity<MovieGenre>()
+                .HasData(
+                    new MovieGenre { GenreId = 1, MovieId = 1 },
+                    new MovieGenre { GenreId = 2, MovieId = 1 },
+                    new MovieGenre { GenreId = 3, MovieId = 1 },
+                    new MovieGenre { GenreId = 1, MovieId = 2 },
+                    new MovieGenre { GenreId = 2, MovieId = 2 },
+                    new MovieGenre { GenreId = 4, MovieId = 2 },
+                    new MovieGenre { GenreId = 3, MovieId = 3 },
+                    new MovieGenre { GenreId = 5, MovieId = 3 },
+                    new MovieGenre { GenreId = 4, MovieId = 4 },
+                    new MovieGenre { GenreId = 1, MovieId = 4 },
+                    new MovieGenre { GenreId = 1, MovieId = 5 },
+                    new MovieGenre { GenreId = 2, MovieId = 5 },
+                    new MovieGenre { GenreId = 6 , MovieId = 6 },
+                    new MovieGenre { GenreId = 2 , MovieId = 6 },
+                    new MovieGenre { GenreId = 6, MovieId = 7 },
+                    new MovieGenre { GenreId = 2, MovieId = 7 },
+                    new MovieGenre { GenreId = 6, MovieId = 8 },
+                    new MovieGenre { GenreId = 2, MovieId = 8 }
+                );
+
             modelBuilder.Entity<Review>()
                 .HasData(
                     new Review { Id = 1, MovieId = 1, Score = 9, Content = "Great movie" },
@@ -73,6 +124,7 @@ namespace imbdAgain.Data
                     new Review { Id = 6, MovieId = 8, Score = 2, Content = "Trash" },
                     new Review { Id = 7, MovieId = 8, Score = 1, Content = "Skip" }
                 );
+
         }
 
 

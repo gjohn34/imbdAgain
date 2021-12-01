@@ -1,6 +1,6 @@
 ﻿namespace imbdAgain.Models
 {
-    public interface ISearchable
+    internal interface IHasGenre
     {
     }
 }

@@ -33,6 +33,8 @@ namespace imbdAgain
                 .AddNewtonsoftJson(jsonOptions =>
                 {
                     jsonOptions.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                    jsonOptions.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                                    //DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
                 }
             );
 
