@@ -31,6 +31,11 @@ body {
             margin-left: auto;
         }
     }
+    #reviewsPane {
+        height: 250px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
 }
 
 .carousel-control-next, .carousel-control-prev {

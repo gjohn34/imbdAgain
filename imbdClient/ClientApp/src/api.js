@@ -1,5 +1,4 @@
 ﻿function postData(path, data, rest = {}) {
-    console.log(JSON.stringify(data))
     return fetch(`${process.env.REACT_APP_API}/${path}`, {
         method: "POST",
         body: JSON.stringify(data),

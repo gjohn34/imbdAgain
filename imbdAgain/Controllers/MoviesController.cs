@@ -130,7 +130,7 @@ namespace imbdAgain.Controllers
             _context.Reviews.Add(review);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(review);
         }
 
         // DELETE: api/Movies/5

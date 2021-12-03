@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { Link, useParams} from 'react-router-dom'
 import Context from '../../context/globalState'
-import { getData } from '../../api'
+import { getData, postData } from '../../api'
 // Components
 import FlexCollection, { Card } from '../../components/FlexContainer'
 import Container from 'react-bootstrap/esm/Container'
@@ -11,13 +11,42 @@ import Collapse from 'react-bootstrap/Collapse'
 import Col from 'react-bootstrap/esm/Col'
 import Row from 'react-bootstrap/esm/Row'
 import Carousel from 'react-bootstrap/Carousel'
+import Form from "react-bootstrap/Form";
+
 
 export default function MovieDetailPage() {
     let { id } = useParams();
     const { isMobile } = useContext(Context)
     const [movie, setMovie] = useState(null)
-    const [showComments, setShowComments] = useState(false)
+    const [showReviews, setShowReviews] = useState(false)
     const [likeThis, setLikeThis] = useState([])
+    const [form, setForm] = useState({ content: "", score: null })
+    const [validated, setValidated] = useState(false)
+
+
+    useEffect(() => {
+        if (!movie || id != movie.id) {
+            getData(`Movies/${id}`)
+                .then(response => response.json())
+                .then(data => setMovie(data))
+
+            getData(`Movies/${id}/More`)
+                .then(response => response.json())
+                .then(data => setLikeThis(data))
+        }
+
+    }, [id])
+
+    const handleSubmit = e => {
+        e.stopPropagation()
+        e.preventDefault()
+        if (e.currentTarget.checkValidity() !== false) {
+            setValidated(true)
+            postData(`Movies/${id}/Reviews`, form)
+                .then(response => response.ok && response.json())
+                .then(d => setMovie({ ...movie, reviews: [ ...movie.reviews, d ]}))
+        }
+    }
 
     const setItems = () => {
         let count = 0
@@ -65,18 +94,16 @@ export default function MovieDetailPage() {
         return array
     }
 
-    useEffect(() => {
-        if (!movie || id != movie.id) {
-            getData(`Movies/${id}`)
-                .then(response => response.json())
-                .then(data => setMovie(data))
+    const reviewsSection = () => {
+        return movie.reviews.length > 0 ? (
+        <div id="reviewsPane">
+            {movie.reviews && movie.reviews.map(review => (
+                <p>{review.content}</p>
+            ))}
+        </div>
+        ) : <p>Be the first to review!</p>
+    }
 
-            getData(`Movies/${id}/More`)
-                .then(response => response.json())
-                .then(data => setLikeThis(data))
-        }
-
-    }, [id])
 
 
     return (
@@ -92,32 +119,66 @@ export default function MovieDetailPage() {
                             </Card>
                         </Col>
                         <Col sm>
+                            <h2>Reviews</h2>
+                            <Form
+                                noValidate
+                                validated={validated}
+                                onSubmit={handleSubmit}
+                                style={{ display: "flex", padding: "10px", flexWrap: "wrap" }}>
+                                <Form.Group className="m-2 d-flex flex-column">
+                                    <Form.Label>Add</Form.Label>
+                                    <Button type="submit">C</Button>
+                                </Form.Group>
+                                <Form.Group className="flex-grow-1 m-2" >
+                                    <Form.Control
+                                        as="textarea"
+                                        required
+                                        value={form.content}
+                                        onChange={e => setForm({ ...form, content: e.target.value })}
+                                        className="form-control"
+                                    />
+                                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                    <Form.Control.Feedback type="invalid">
+                                        Please choose a username.
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                                <Row style={{ width: "100%", textAlign: "center" }}>
+                                    {form.score == null ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(x =>
+                                        <Col>
+                                            <Button
+                                                as="input"
+                                                type="button"
+                                                value={x}
+                                                onClick={e => setForm({ ...form, score: e.target.value })}
+                                                variant="outline-warning"
+                                            />
+                                        </Col>
+                                    ) :
+                                        <Col>
+                                            <Button
+                                                as="input"
+                                                className="active"
+                                                type="button"
+                                                value={form.score}
+                                                onClick={e => setForm({ ...form, score: null })}
+                                                variant="outline-warning"
+                                            />
+                                        </Col>
+                                    }
+                                </Row>
+                            </Form>
                             {isMobile ? (
                                 <>
-                                    <Button onClick={() => setShowComments(!showComments)}
-                                        aria-controls="commentsPane"
-                                        aria-expanded={showComments}>
-                                        {showComments ? "Hide" : "Show"} comments
+                                    <Button onClick={() => setShowReviews(!showReviews)}
+                                        aria-controls="reviewsPane"
+                                        aria-expanded={showReviews}>
+                                        {showReviews ? "Hide" : "Show"} reviews
                                     </Button>
-                                    <Collapse in={showComments}>
-                                        <div id="commentsPane">
-                                            <h2>Reviews</h2>
-                                            {movie.reviews && movie.reviews.map(review => (
-                                                <p>{review.content}</p>
-                                            ))}
-                                        </div>
+                                    <Collapse in={showReviews}>
+                                        {reviewsSection()}
                                     </Collapse>
                                 </>
-                            ) : (
-                                <>
-                                    <div id="commentsPane">
-                                        <h2>Reviews</h2>
-                                        {movie.reviews && movie.reviews.map(review => (
-                                            <p>{review.content}</p>
-                                        ))}
-                                    </div>
-                                </>
-                            )}
+                            ) : reviewsSection()}
                         </Col>
                     </Row>
                     <h2>More like this</h2>

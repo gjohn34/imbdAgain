@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace imbdAgain.Models
@@ -17,9 +18,8 @@ namespace imbdAgain.Models
         [Range(0,10)]
         public int Score { get; set; }
         [Required]
-
         public string Content { get; set; }
-
+        [JsonIgnore]
         public Movie Movie { get; set; }
     }
 }
