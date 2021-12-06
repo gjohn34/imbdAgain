@@ -1,7 +1,6 @@
 ﻿// Packages
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import Context from '../../context/globalState'
 import { getData } from '../../api'
 // Components
 import { Card } from '../../components/FlexContainer'
@@ -11,13 +10,14 @@ import { Card } from '../../components/FlexContainer'
 export default function DirectorDetailPage() {
     let { id } = useParams();
     const [director, setDirector] = useState(null)
+
     useEffect(() => {
         if (!director && id) {
             getData(`Directors/${id}`)
                 .then(response => response.json())
                 .then(data => setDirector(data))
         }
-    }, [])
+    }, [director, id])
 
 
     return (

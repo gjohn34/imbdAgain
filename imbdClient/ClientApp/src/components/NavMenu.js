@@ -1,4 +1,4 @@
-import React, { Component, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 
 import Context from '../context/globalState'
@@ -20,8 +20,8 @@ export default function NavBar() {
         postData("search", form)
             .then(result => result.json())
             .then(data => {
-                dispatch({ action: `set${type == "0" ? "Directors" : "Movies"}`, data })
-                navigate(`/${type == "0" ? "directors" : "movies"}`)
+                dispatch({ action: `set${type === "0" ? "Directors" : "Movies"}`, data })
+                navigate(`/${type === "0" ? "directors" : "movies"}`)
             })
     }
 
@@ -35,6 +35,7 @@ export default function NavBar() {
                     <Nav className="w-100">
                         <Nav.Item><Link to="/movies" className="nav-link active">Movies</Link></Nav.Item>
                         <Nav.Item><Link to="/directors" className="nav-link active">Directors</Link></Nav.Item>
+                        <Nav.Item><Link to="/genres" className="nav-link active">Genres</Link></Nav.Item>
                         <Form onSubmit={handleSubmit} className="d-flex nav-item me-auto">
                             <Form.Control type="search" onChange={e => setForm({ ...form, query: e.target.value })} placeholder="Search..." />
                             <Form.Select onChange={e => setForm({ ...form, type: e.target.value })} aria-label="search">

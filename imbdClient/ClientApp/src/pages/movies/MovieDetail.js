@@ -1,16 +1,17 @@
 ﻿// Packages
 import React, { useEffect, useState, useContext } from 'react'
-import { Link, useParams} from 'react-router-dom'
+import { useParams} from 'react-router-dom'
 import Context from '../../context/globalState'
 import { getData, postData } from '../../api'
 // Components
-import FlexCollection, { Card } from '../../components/FlexContainer'
+import { Card } from '../../components/FlexContainer'
+import Carousel from '../../components/Carousel'
+// Bootstrap
 import Container from 'react-bootstrap/esm/Container'
 import Button from 'react-bootstrap/Button'
 import Collapse from 'react-bootstrap/Collapse'
 import Col from 'react-bootstrap/esm/Col'
 import Row from 'react-bootstrap/esm/Row'
-import Carousel from 'react-bootstrap/Carousel'
 import Form from "react-bootstrap/Form";
 
 
@@ -25,7 +26,7 @@ export default function MovieDetailPage() {
 
 
     useEffect(() => {
-        if (!movie || id != movie.id) {
+        if (!movie || id !== movie.id) {
             getData(`Movies/${id}`)
                 .then(response => response.json())
                 .then(data => setMovie(data))
@@ -35,7 +36,7 @@ export default function MovieDetailPage() {
                 .then(data => setLikeThis(data))
         }
 
-    }, [id])
+    }, [movie, id])
 
     const handleSubmit = e => {
         e.stopPropagation()
@@ -48,57 +49,11 @@ export default function MovieDetailPage() {
         }
     }
 
-    const setItems = () => {
-        let count = 0
-        let array = []
-        let subArray = []
-        likeThis.forEach(m => {
-            if (count < Math.floor((window.innerWidth - 300) / 250)) {
-                subArray.push(
-                    <Link reloadDocument to={`/movies/${m.id}`}>
-                        <Card>
-                            <h2 className="text-wrap">{m.title}</h2>
-                            <p>{m.releaseYear}</p>
-                        </Card>
-                    </Link>
-                )
-            } else {
-                count = 0
-                array.push(
-                    <Carousel.Item>
-                        <FlexCollection>
-                            {subArray}
-                        </FlexCollection>
-                    </Carousel.Item>
-                )
-                subArray = [
-                    <Link reloadDocument to={`/movies/${m.id}`} >
-                        <Card>
-                            <h2 className="text-wrap">{m.title}</h2>
-                            <p>{m.releaseYear}</p>
-                        </Card>
-                    </Link>
-                ]
-            }
-            count += 1
-
-        })
-        array.push(
-            <Carousel.Item>
-                <FlexCollection>
-                    {subArray}
-                </FlexCollection>
-            </Carousel.Item>
-        )
-
-        return array
-    }
-
     const reviewsSection = () => {
         return movie.reviews.length > 0 ? (
         <div id="reviewsPane">
-            {movie.reviews && movie.reviews.map(review => (
-                <p>{review.content}</p>
+                {movie.reviews && movie.reviews.map(review => (
+                    <p key={review.id}>{review.content}</p>
             ))}
         </div>
         ) : <p>Be the first to review!</p>
@@ -144,7 +99,7 @@ export default function MovieDetailPage() {
                                 </Form.Group>
                                 <Row style={{ width: "100%", textAlign: "center" }}>
                                     {form.score == null ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(x =>
-                                        <Col>
+                                        <Col key={x}>
                                             <Button
                                                 as="input"
                                                 type="button"
@@ -182,19 +137,7 @@ export default function MovieDetailPage() {
                         </Col>
                     </Row>
                     <h2>More like this</h2>
-                    {isMobile ? 
-                        <Carousel style={{ backgroundColor: "black", color: "white", height: "500px" }}>
-                            {likeThis.map(m =>
-                                <Carousel.Item>
-                                    <h2 style={{ color: "yellow" }}>{m.title}</h2>
-                                </Carousel.Item>
-                            )}
-                        </Carousel>
-                        :
-                        <Carousel interval={null} style={{ backgroundColor: "black", color: "red", height: "500px" }}>
-                            {likeThis.length > 0 && setItems()}
-                        </Carousel>
-                    }
+                    <Carousel list={likeThis} />
                 </Container>
             ) : null}
         </>

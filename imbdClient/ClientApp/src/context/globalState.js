@@ -1,4 +1,4 @@
-﻿import React, { createContext } from 'react'
+﻿import { createContext } from 'react'
 
 export const reducer = (state, { action, data }) => {
     switch (action) {
@@ -17,8 +17,9 @@ export const reducer = (state, { action, data }) => {
                 ...state,
                 isMobile: data
             }
+        default:
+            return state
     }
-    return state;
 }
 
 export default createContext();

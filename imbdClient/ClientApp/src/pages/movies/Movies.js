@@ -1,18 +1,18 @@
-﻿import React, { useEffect, useReducer, useContext } from 'react';
-import { Link, Route, Routes, useLocation } from 'react-router-dom'
+﻿import React, { useEffect, useContext, useCallback } from 'react';
+import { Link } from 'react-router-dom'
 import Context from '../../context/globalState';
 import FlexCollection, { Card } from '../../components/FlexContainer'
-import MovieDetailPage from './MovieDetail'
 
 export default function Movies() {
     const { movies, dispatch } = useContext(Context)
+    const stableDispatch = useCallback(dispatch, []) //assuming that it doesn't need to change
     useEffect(() => {
         if (!movies) {
             fetch(`${process.env.REACT_APP_API}/Movies`)
                 .then(response => response.json())
-                .then(data => dispatch({ action: "setMovies", data }))
+                .then(data => stableDispatch({ action: "setMovies", data }))
         }
-    }, [])
+    }, [movies, stableDispatch])
     return (
         <>
             <h2>All movies</h2>

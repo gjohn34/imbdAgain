@@ -1,17 +1,19 @@
-﻿import React, { useEffect, useReducer, useContext } from 'react';
+﻿import React, { useEffect, useCallback, useContext } from 'react';
 import { Link } from 'react-router-dom'
 import Context from '../../context/globalState';
 import FlexCollection, { Card } from '../../components/FlexContainer'
 
 export default function Movies() {
     const { directors, dispatch } = useContext(Context)
+    const stableDispatch = useCallback(dispatch, []) //assuming that it doesn't need to change
+
     useEffect(() => {
         if (!directors) {
             fetch(`${process.env.REACT_APP_API}/Directors`)
                 .then(response => response.json())
-                .then(data => dispatch({ action: "setDirectors", data }))
+                .then(data => stableDispatch({ action: "setDirectors", data }))
         }
-    }, [])
+    }, [directors, stableDispatch])
     return (
         <>
             <h2>Directors</h2>

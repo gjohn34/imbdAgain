@@ -1,6 +1,6 @@
 // Packages
 import React, { useEffect, useReducer } from 'react';
-import { Switch, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Context, { reducer } from './context/globalState'
 import { getData } from './api'
 
@@ -14,6 +14,7 @@ import Directors from './pages/directors/Directors'
 import Home from './pages/Home'
 import MovieDetailPage from './pages/movies/MovieDetail';
 import DirectorDetailPage from './pages/directors/DirectorDetail'
+import GenresPage from './pages/genres/index'
 
 import './custom.css'
 
@@ -52,6 +53,9 @@ export default function App() {
                     <Route path="directors">
                         <Route index element={<Directors />} />
                         <Route path=":id" element={<DirectorDetailPage />} />
+                    </Route>
+                    <Route path="genres">
+                        <Route index element={<GenresPage />} />
                     </Route>
                 </Routes>
             </Layout>
