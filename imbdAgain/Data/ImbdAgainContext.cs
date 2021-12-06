@@ -28,7 +28,7 @@ namespace imbdAgain.Data
 
             modelBuilder.Entity<Movie>()
                 .HasMany(m => m.Genres)
-                .WithMany(m => m.Movies)
+                .WithMany(g => g.Movies)
                 .UsingEntity<MovieGenre>(
                     e => e
                             .HasOne(mg => mg.Genre)
@@ -44,6 +44,23 @@ namespace imbdAgain.Data
                 .HasMany(m => m.Reviews)
                 .WithOne(r => r.Movie)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Genre>()
+                .HasMany(g => g.Movies)
+                .WithMany(m => m.Genres)
+                .UsingEntity<MovieGenre>(
+                    e => e
+                            .HasOne(mg => mg.Movie)
+                            .WithMany(m => m.MovieGenres)
+                            .HasForeignKey(mg => mg.MovieId),
+                    e => e
+                            .HasOne(mg => mg.Genre)
+                            .WithMany(g => g.MovieGenres)
+                            .HasForeignKey(mg => mg.GenreId),
+                    e => e
+                            .HasKey(mg => new { mg.GenreId, mg.MovieId })
+                );
+
 
             modelBuilder.Entity<Director>()
                 .HasData(

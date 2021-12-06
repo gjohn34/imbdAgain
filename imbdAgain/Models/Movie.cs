@@ -22,17 +22,5 @@ namespace imbdAgain.Models
         public virtual List<Genre> Genres { get; set; }
         //[JsonIgnore]
         public virtual List<MovieGenre> MovieGenres { get; set; }
-
-        public static bool HasGenre() 
-        {
-            //foreach (Genre genre in collectionOne)
-            //{
-            //    if (collectionTwo.Contains(genre))
-            //    {
-            //        return true;
-            //    }
-            //}
-            return true;
-        }
     }
 }

@@ -69,7 +69,7 @@ namespace imbdAgain
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+                
             app.UseAuthorization();
 
             app.UseCors(options => options.AllowAnyOrigin());

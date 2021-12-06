@@ -11,7 +11,6 @@ namespace imbdAgain.Models
         [Required]
         public string Name { get; set; }
         public virtual List<Movie> Movies { get; set; }
-        [JsonIgnore]
         public virtual List<MovieGenre> MovieGenres { get; set; }
         //[Required]
         //public string RecordType { get; set; }
