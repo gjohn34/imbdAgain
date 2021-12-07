@@ -21,12 +21,12 @@ export default function MovieDetailPage() {
     const [movie, setMovie] = useState(null)
     const [showReviews, setShowReviews] = useState(false)
     const [likeThis, setLikeThis] = useState([])
-    const [form, setForm] = useState({ content: "", score: null })
+    const [form, setForm] = useState({ content: "", score: undefined })
     const [validated, setValidated] = useState(false)
 
 
     useEffect(() => {
-        if (!movie || id !== movie.id) {
+        if (!movie || id?.toString() !== movie.id) {
             getData(`Movies/${id}`)
                 .then(response => response.json())
                 .then(data => setMovie(data))
@@ -35,18 +35,18 @@ export default function MovieDetailPage() {
                 .then(response => response.json())
                 .then(data => setLikeThis(data))
         }
-
     }, [movie, id])
 
     const handleSubmit = e => {
-        e.stopPropagation()
-        e.preventDefault()
-        if (e.currentTarget.checkValidity() !== false) {
-            setValidated(true)
+        if (e.currentTarget.checkValidity() === false) {
+            e.stopPropagation()
+            e.preventDefault()
+        } else {
             postData(`Movies/${id}/Reviews`, form)
                 .then(response => response.ok && response.json())
-                .then(d => setMovie({ ...movie, reviews: [ ...movie.reviews, d ]}))
+                .then(d => setMovie({ ...movie, reviews: [...movie.reviews, d] }))
         }
+        setValidated(true)
     }
 
     const reviewsSection = () => {
@@ -81,8 +81,7 @@ export default function MovieDetailPage() {
                                 onSubmit={handleSubmit}
                                 style={{ display: "flex", padding: "10px", flexWrap: "wrap" }}>
                                 <Form.Group className="m-2 d-flex flex-column">
-                                    <Form.Label>Add</Form.Label>
-                                    <Button type="submit">C</Button>
+                                    <Button type="submit">Post</Button>
                                 </Form.Group>
                                 <Form.Group className="flex-grow-1 m-2" >
                                     <Form.Control
@@ -92,9 +91,9 @@ export default function MovieDetailPage() {
                                         onChange={e => setForm({ ...form, content: e.target.value })}
                                         className="form-control"
                                     />
-                                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+                                    {/*<Form.Control.Feedback>Looks good!</Form.Control.Feedback>*/}
                                     <Form.Control.Feedback type="invalid">
-                                        Please choose a username.
+                                        Tell us your thoughts!.
                                     </Form.Control.Feedback>
                                 </Form.Group>
                                 <Row style={{ width: "100%", textAlign: "center" }}>
@@ -120,6 +119,9 @@ export default function MovieDetailPage() {
                                             />
                                         </Col>
                                     }
+                                    <Form.Control required value={form.score} hidden />
+                                    {/*<Form.Control.Feedback>Looks good!</Form.Control.Feedback>*/}
+                                    <Form.Control.Feedback type="invalid">What score?</Form.Control.Feedback>
                                 </Row>
                             </Form>
                             {isMobile ? (
