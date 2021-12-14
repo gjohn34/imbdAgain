@@ -13,6 +13,7 @@ namespace imbdAgain.Data
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Genre> Genres { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public ImbdAgainContext (DbContextOptions<ImbdAgainContext> options)
             : base(options)
@@ -21,6 +22,8 @@ namespace imbdAgain.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>();
+
             modelBuilder.Entity<Director>()
                 .HasMany(d => d.Movies)
                 .WithOne(m => m.Director)
@@ -82,6 +85,13 @@ namespace imbdAgain.Data
                         FirstName = "Uwe",
                         LastName = "Boll"
                     }
+                );
+
+            modelBuilder.Entity<User>()
+                .HasData(
+                    new User { Id = 1, Username = "john", Password = "password" },
+                    new User { Id = 2, Username = "foo", Password = "bar" },
+                    new User { Id = 3, Username = "luke", Password = "password" }
                 );
 
 

@@ -9,6 +9,9 @@ using imbdAgain.Data;
 using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 using System.Reflection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace imbdAgain
 {
@@ -37,6 +40,27 @@ namespace imbdAgain
                                     //DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
                 }
             );
+
+            services.AddControllers();
+            var key = "This is my first Test Key";
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key))
+                };
+            });
+
+            services.AddSingleton<IJWTAuth>(new Auth(key));
 
             services.AddCors(c =>
             {
@@ -69,6 +93,8 @@ namespace imbdAgain
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
                 
             app.UseAuthorization();
 

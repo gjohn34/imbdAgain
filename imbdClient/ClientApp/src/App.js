@@ -22,7 +22,8 @@ export default function App() {
     const [store, dispatch] = useReducer(reducer, {
         movies: [],
         directors: [],
-        isMobile: window.innerWidth <= 575
+        isMobile: window.innerWidth <= 575,
+        user: true,
     });
 
     const handleResize = () => {
@@ -57,6 +58,8 @@ export default function App() {
                     <Route path="genres">
                         <Route index element={<GenresPage />} />
                     </Route>
+                    <Route path="login" element={<h2>login</h2>} />
+                    <Route path="register" element={<h2>signup</h2>} />
                 </Routes>
             </Layout>
         </Context.Provider>

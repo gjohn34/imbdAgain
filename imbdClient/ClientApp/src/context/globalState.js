@@ -17,6 +17,11 @@ export const reducer = (state, { action, data }) => {
                 ...state,
                 isMobile: data
             }
+        case "setUser":
+            return {
+                ...state,
+                user: data
+            }
         default:
             return state
     }

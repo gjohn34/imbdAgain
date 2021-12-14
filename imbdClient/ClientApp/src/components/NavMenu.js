@@ -11,7 +11,7 @@ import { postData } from '../api'
 
 export default function NavBar() {
     const [form, setForm] = useState({ query: "", type: "0" })
-    const { dispatch } = useContext(Context)
+    const { user, dispatch } = useContext(Context)
     let navigate = useNavigate();
 
     const handleSubmit = (e) => {
@@ -23,6 +23,10 @@ export default function NavBar() {
                 dispatch({ action: `set${type === "0" ? "Directors" : "Movies"}`, data })
                 navigate(`/${type === "0" ? "directors" : "movies"}`)
             })
+    }
+
+    const handleLogout = () => {
+        dispatch({action: "setUser", data: null})
     }
 
 
@@ -44,6 +48,14 @@ export default function NavBar() {
                             </Form.Select>
                             <Button type="submit">Search</Button>
                         </Form>
+                        {user ?
+                            <Nav.Item><Button onClick={handleLogout}>Log Out</Button></Nav.Item>
+                            :
+                            <>
+                                <Nav.Item><Link to="/login" className="nav-link active">Login</Link></Nav.Item>
+                                <Nav.Item><Link to="/register" className="nav-link active">Sign Up</Link></Nav.Item>
+                            </>
+                        }
                     </Nav>
                 </Navbar.Collapse>
             </Container>
