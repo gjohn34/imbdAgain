@@ -15,15 +15,17 @@ import Home from './pages/Home'
 import MovieDetailPage from './pages/movies/MovieDetail';
 import DirectorDetailPage from './pages/directors/DirectorDetail'
 import GenresPage from './pages/genres/index'
+import LoginPage from './pages/auth/login'
 
 import './custom.css'
+import SignupPage from './pages/auth/signup';
 
 export default function App() {
     const [store, dispatch] = useReducer(reducer, {
         movies: [],
         directors: [],
         isMobile: window.innerWidth <= 575,
-        user: true,
+        user: false,
     });
 
     const handleResize = () => {
@@ -32,6 +34,28 @@ export default function App() {
 
     useEffect(() => {
         window.addEventListener("resize", handleResize)
+        let token = localStorage.getItem("token")
+        if (token) {
+            getData("Users/Authenticate", {
+                headers: {
+                    "token": token,
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(d => {
+                    if (d.status == 200) {
+                        return d.json()
+                    }
+                    throw new Error
+                })
+                .then(json => {
+                    console.log(json)
+                    dispatch({ action: "setUser", data: json })
+                })
+                .catch(e => localStorage.removeItem("token"))
+            
+            console.log("there is a token")
+        }
         getData("Movies")
             .then(response => response.json())
             .then(data => dispatch({ action: "setMovies", data }))
@@ -58,8 +82,8 @@ export default function App() {
                     <Route path="genres">
                         <Route index element={<GenresPage />} />
                     </Route>
-                    <Route path="login" element={<h2>login</h2>} />
-                    <Route path="register" element={<h2>signup</h2>} />
+                    <Route path="login" element={<LoginPage />} />
+                    <Route path="register" element={<SignupPage />} />
                 </Routes>
             </Layout>
         </Context.Provider>

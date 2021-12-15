@@ -44,9 +44,14 @@ namespace imbdAgain.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register(User user) 
         {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
+            try
+            {
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+            } catch
+            {
+                return BadRequest();
+            }
             var token = _jwtAuth.Authentication(user.Username, user.Password, _context.Users);
             if (token == null)
                 return Unauthorized();
@@ -63,11 +68,11 @@ namespace imbdAgain.Controllers
             if (token == null)
                 return Unauthorized();
 
-            return Created("/login", new { token = token, user = new { id = user.Id, username = user.Username } });
+            return Ok(new { token = token, user = new { id = user.Id, username = user.Username } });
         }
 
+        [HttpGet("authenticate")]
         [AllowAnonymous]
-        [HttpPost("Authenticate")]
         public async Task<ActionResult<User>> Authenticate([FromHeader]string token)
         {
             try

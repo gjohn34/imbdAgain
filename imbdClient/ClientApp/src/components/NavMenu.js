@@ -26,6 +26,7 @@ export default function NavBar() {
     }
 
     const handleLogout = () => {
+        localStorage.removeItem("token")
         dispatch({action: "setUser", data: null})
     }
 
