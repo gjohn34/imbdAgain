@@ -50,7 +50,11 @@ export default function NavBar() {
                             <Button type="submit">Search</Button>
                         </Form>
                         {user ?
-                            <Nav.Item><Button onClick={handleLogout}>Log Out</Button></Nav.Item>
+                            <>
+                                <Nav.Item><Link to="/dashboard" className="btn btn-primary">Dash</Link></Nav.Item>
+                                <Nav.Item><Button onClick={handleLogout}>Log Out</Button></Nav.Item>
+                            </>
+
                             :
                             <>
                                 <Nav.Item><Link to="/login" className="nav-link active">Login</Link></Nav.Item>

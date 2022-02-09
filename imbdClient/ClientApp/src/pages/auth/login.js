@@ -9,10 +9,12 @@ import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/esm/Container'
 import Row from 'react-bootstrap/esm/Row'
 import Col from 'react-bootstrap/esm/Col'
+import Alert from 'react-bootstrap/Alert'
 import { useNavigate } from 'react-router-dom'
 
 export default function Login() {
     const [form, setForm] = useState({ username: "", password: "" })
+    const [error, setError] = useState(false)
     const { dispatch } = useContext(Context)
     let navigate = useNavigate();
 
@@ -26,18 +28,20 @@ export default function Login() {
                 throw new Error
             })
             .then(json => {
-                console.log(json)
                 localStorage.setItem("token", json.token)
                 dispatch({ action: "setUser", data: json.user })
-                navigate('/')
+                navigate(-1)
             })
-            .catch(e => { })
+            .catch(e => {
+                setError(true)
+            })
     }
     return (
         <Row className="justify-content-md-center">
             <Col md="8" lg="6">
                 <h2>Login Page</h2>
                 <Form onSubmit={handleSubmit} >
+                    {error && <Alert variant='dark'>Invalid Credentials Beep Bop</Alert>}
                     <Form.Group className="mb-3" controlId="username">
                         <Form.Label>Username</Form.Label>
                         <Form.Control value={form.username} onChange={e => setForm({ ...form, username: e.target.value })} type="text" />

@@ -28,7 +28,7 @@ export default function Signup() {
             .then(json => {
                 localStorage.setItem("token", json.token)
                 dispatch({ action: "setUser", data: json.user })
-                navigate('/')
+                navigate(-1)
             })
             .catch(e => { })
     }

@@ -17,7 +17,7 @@ import Form from "react-bootstrap/Form";
 
 export default function MovieDetailPage() {
     let { id } = useParams();
-    const { isMobile } = useContext(Context)
+    const { isMobile, user } = useContext(Context)
     const [movie, setMovie] = useState(null)
     const [showReviews, setShowReviews] = useState(false)
     const [likeThis, setLikeThis] = useState([])
@@ -26,7 +26,7 @@ export default function MovieDetailPage() {
 
 
     useEffect(() => {
-        if (!movie || id?.toString() !== movie.id) {
+        if (!movie || id !== movie.id.toString()) {
             getData(`Movies/${id}`)
                 .then(response => response.json())
                 .then(data => setMovie(data))
@@ -38,7 +38,8 @@ export default function MovieDetailPage() {
     }, [movie, id])
 
     const handleSubmit = e => {
-        if (e.currentTarget.checkValidity() === false) {
+        console.log(e.currentTarget.checkValidity())
+        if (e.currentTarget.checkValidity() === false || form.score == undefined) {
             e.stopPropagation()
             e.preventDefault()
         } else {
@@ -75,55 +76,58 @@ export default function MovieDetailPage() {
                         </Col>
                         <Col sm>
                             <h2>Reviews</h2>
-                            <Form
-                                noValidate
-                                validated={validated}
-                                onSubmit={handleSubmit}
-                                style={{ display: "flex", padding: "10px", flexWrap: "wrap" }}>
-                                <Form.Group className="m-2 d-flex flex-column">
-                                    <Button type="submit">Post</Button>
-                                </Form.Group>
-                                <Form.Group className="flex-grow-1 m-2" >
-                                    <Form.Control
-                                        as="textarea"
-                                        required
-                                        value={form.content}
-                                        onChange={e => setForm({ ...form, content: e.target.value })}
-                                        className="form-control"
-                                    />
-                                    {/*<Form.Control.Feedback>Looks good!</Form.Control.Feedback>*/}
-                                    <Form.Control.Feedback type="invalid">
-                                        Tell us your thoughts!.
-                                    </Form.Control.Feedback>
-                                </Form.Group>
-                                <Row style={{ width: "100%", textAlign: "center" }}>
-                                    {form.score == null ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(x =>
-                                        <Col key={x}>
-                                            <Button
-                                                as="input"
-                                                type="button"
-                                                value={x}
-                                                onClick={e => setForm({ ...form, score: e.target.value })}
-                                                variant="outline-warning"
-                                            />
-                                        </Col>
-                                    ) :
-                                        <Col>
-                                            <Button
-                                                as="input"
-                                                className="active"
-                                                type="button"
-                                                value={form.score}
-                                                onClick={e => setForm({ ...form, score: null })}
-                                                variant="outline-warning"
-                                            />
-                                        </Col>
-                                    }
-                                    <Form.Control required value={form.score} hidden />
-                                    {/*<Form.Control.Feedback>Looks good!</Form.Control.Feedback>*/}
-                                    <Form.Control.Feedback type="invalid">What score?</Form.Control.Feedback>
-                                </Row>
-                            </Form>
+                            {user && (
+                                <Form
+                                    noValidate
+                                    validated={validated}
+                                    onSubmit={handleSubmit}
+                                    style={{ display: "flex", padding: "10px", flexWrap: "wrap" }}>
+                                    <Form.Group className="m-2 d-flex flex-column">
+                                        <Button type="submit">Post</Button>
+                                    </Form.Group>
+                                    <Form.Group className="flex-grow-1 m-2" >
+                                        <Form.Control
+                                            as="textarea"
+                                            required
+                                            value={form.content}
+                                            onChange={e => setForm({ ...form, content: e.target.value })}
+                                            className="form-control"
+                                        />
+                                        {/*<Form.Control.Feedback>Looks good!</Form.Control.Feedback>*/}
+                                        <Form.Control.Feedback type="invalid">
+                                            Tell us your thoughts!.
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
+                                    <Row style={{ width: "100%", textAlign: "center" }}>
+                                        {form.score == null ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(x =>
+                                            <Col key={x}>
+                                                <Button
+                                                    as="input"
+                                                    type="button"
+                                                    value={x}
+                                                    onClick={e => setForm({ ...form, score: e.target.value })}
+                                                    variant="outline-warning"
+                                                />
+                                            </Col>
+                                        ) :
+                                            <Col>
+                                                <Button
+                                                    as="input"
+                                                    className="active"
+                                                    type="button"
+                                                    value={form.score}
+                                                    onClick={e => setForm({ ...form, score: null })}
+                                                    variant="outline-warning"
+                                                />
+                                            </Col>
+                                        }
+                                        <Form.Control required onChange={() => { }} value={form.score} hidden />
+                                        {/*<Form.Control.Feedback>Looks good!</Form.Control.Feedback>*/}
+                                        <Form.Control.Feedback type="invalid">What score?</Form.Control.Feedback>
+                                    </Row>
+                                </Form>
+                                )
+                            }
                             {isMobile ? (
                                 <>
                                     <Button onClick={() => setShowReviews(!showReviews)}

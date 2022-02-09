@@ -1,6 +1,6 @@
 // Packages
 import React, { useEffect, useReducer } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import Context, { reducer } from './context/globalState'
 import { getData } from './api'
 
@@ -49,12 +49,9 @@ export default function App() {
                     throw new Error
                 })
                 .then(json => {
-                    console.log(json)
                     dispatch({ action: "setUser", data: json })
                 })
                 .catch(e => localStorage.removeItem("token"))
-            
-            console.log("there is a token")
         }
         getData("Movies")
             .then(response => response.json())
@@ -82,6 +79,7 @@ export default function App() {
                     <Route path="genres">
                         <Route index element={<GenresPage />} />
                     </Route>
+                    <Route path="dashboard" element={<h2>Foo</h2>} />
                     <Route path="login" element={<LoginPage />} />
                     <Route path="register" element={<SignupPage />} />
                 </Routes>

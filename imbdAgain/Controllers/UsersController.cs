@@ -65,8 +65,10 @@ namespace imbdAgain.Controllers
         {
             var token = _jwtAuth.Authentication(user.Username, user.Password, _context.Users);
 
+
             if (token == null)
                 return Unauthorized();
+                //return Unauthorized(new {Message =  "Invalid Credentials"});
 
             return Ok(new { token = token, user = new { id = user.Id, username = user.Username } });
         }

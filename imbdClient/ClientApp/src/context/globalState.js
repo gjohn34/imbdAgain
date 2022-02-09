@@ -22,6 +22,11 @@ export const reducer = (state, { action, data }) => {
                 ...state,
                 user: data
             }
+        case "setRedirectTo":
+            return {
+                ...state,
+                redirectTo: data
+            }
         default:
             return state
     }
