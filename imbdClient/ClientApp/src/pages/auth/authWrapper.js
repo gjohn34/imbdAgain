@@ -1,28 +1,36 @@
 ﻿// Packages
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 // Components
 import { postData } from '../../api'
 import Context from '../../context/globalState'
 // Bootstrap
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import Container from 'react-bootstrap/esm/Container'
 import Row from 'react-bootstrap/esm/Row'
 import Col from 'react-bootstrap/esm/Col'
-import Alert from 'react-bootstrap/Alert'
-import { useNavigate } from 'react-router-dom'
+import Alert from 'react-bootstrap/esm/Alert'
+import { useNavigate, Outlet, useLocation } from 'react-router-dom'
 
-export default function Login() {
+export default function AuthWrapper(props) {
     const [form, setForm] = useState({ username: "", password: "" })
     const [error, setError] = useState(false)
-    const { dispatch } = useContext(Context)
+    const { user, dispatch } = useContext(Context)
     let navigate = useNavigate();
+    let location = useLocation();
+    const path = location.pathname == "/auth/register" ? "register" : "login"
 
-    const handleSubmit = e => {
+    useEffect(() => {
+        if (user) {
+            navigate("/dashboard")
+        }
+    }, [location])
+
+    const handleSubmit = (e) => {
         e.preventDefault()
-        postData("Users/login", form)
+        postData(`Users/${path}`, form)
             .then(d => {
-                if (d.status == 200) {
+                console.log(d)
+                if (d.ok) {
                     return d.json()
                 }
                 throw new Error
@@ -36,10 +44,11 @@ export default function Login() {
                 setError(true)
             })
     }
+
     return (
         <Row className="justify-content-md-center">
             <Col md="8" lg="6">
-                <h2>Login Page</h2>
+                <Outlet />
                 <Form onSubmit={handleSubmit} >
                     {error && <Alert variant='dark'>Invalid Credentials Beep Bop</Alert>}
                     <Form.Group className="mb-3" controlId="username">
@@ -50,9 +59,10 @@ export default function Login() {
                         <Form.Label>Password</Form.Label>
                         <Form.Control value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} type="password" />
                     </Form.Group>
-                    <Button type="submit" variant="primary">Log Up</Button>
+                    <Button type="submit" variant="primary">{path == "register" ? "Sign Up" : "Log In"}</Button>
                 </Form>
             </Col>
         </Row>
-    )
+        )
 }
+

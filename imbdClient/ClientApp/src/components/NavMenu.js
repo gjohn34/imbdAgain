@@ -57,8 +57,8 @@ export default function NavBar() {
 
                             :
                             <>
-                                <Nav.Item><Link to="/login" className="nav-link active">Login</Link></Nav.Item>
-                                <Nav.Item><Link to="/register" className="nav-link active">Sign Up</Link></Nav.Item>
+                                <Nav.Item><Link to="/auth/login" className="nav-link active">Login</Link></Nav.Item>
+                                <Nav.Item><Link to="/auth/register" className="nav-link active">Sign Up</Link></Nav.Item>
                             </>
                         }
                     </Nav>

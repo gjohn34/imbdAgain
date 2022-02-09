@@ -19,6 +19,7 @@ import LoginPage from './pages/auth/login'
 
 import './custom.css'
 import SignupPage from './pages/auth/signup';
+import AuthWrapper from './pages/auth/authWrapper';
 
 export default function App() {
     const [store, dispatch] = useReducer(reducer, {
@@ -80,8 +81,10 @@ export default function App() {
                         <Route index element={<GenresPage />} />
                     </Route>
                     <Route path="dashboard" element={<h2>Foo</h2>} />
-                    <Route path="login" element={<LoginPage />} />
-                    <Route path="register" element={<SignupPage />} />
+                    <Route path="auth" element={<AuthWrapper />}>
+                        <Route path="login" element={<h1>Login</h1>} />
+                        <Route path="register" element={<h1>Sign Up</h1>} />
+                    </Route>
                 </Routes>
             </Layout>
         </Context.Provider>
