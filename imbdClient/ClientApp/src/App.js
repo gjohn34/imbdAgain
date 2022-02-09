@@ -1,6 +1,6 @@
 // Packages
 import React, { useEffect, useReducer } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Context, { reducer } from './context/globalState'
 import { getData } from './api'
 
@@ -15,11 +15,9 @@ import Home from './pages/Home'
 import MovieDetailPage from './pages/movies/MovieDetail';
 import DirectorDetailPage from './pages/directors/DirectorDetail'
 import GenresPage from './pages/genres/index'
-import LoginPage from './pages/auth/login'
+import AuthWrapper from './pages/auth/authWrapper';
 
 import './custom.css'
-import SignupPage from './pages/auth/signup';
-import AuthWrapper from './pages/auth/authWrapper';
 
 export default function App() {
     const [store, dispatch] = useReducer(reducer, {
